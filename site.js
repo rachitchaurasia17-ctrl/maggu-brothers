@@ -291,3 +291,92 @@ window.addEventListener('load', () => {
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 })();
+
+/* === AI Chatbot (Groq via /api/chat proxy) === */
+(function () {
+  const SYSTEM = `You are the studio assistant for Maggu Brothers, a premium bespoke automotive customisation workshop in Chandigarh, India, founded in 2004. Help visitors learn about the studio and guide them toward booking a consultation.
+
+Studio facts:
+- Services: high-end audio engineering, bespoke leather interiors, vinyl wraps, paint protection film (PPF), carbon fibre detailing, acoustic tuning
+- Location: SCO 122, Sector 28D, Chandigarh — IN 160028
+- Hours: Mon–Fri 11:00–20:00 | Saturday 10:00–20:00 | Sunday closed
+- Contact: WhatsApp / call +91 89680 17508
+- Booking: only 5 builds accepted per quarter — always limited
+- Founded by R. Maggu & Sons | 22+ years | 10,000+ vehicles transformed | 100% word-of-mouth
+- Website booking page: booking.html
+
+Tone: Refined, confident, concise. Match a luxury automotive brand voice. Never be salesy. Keep answers to 2–4 sentences unless more detail is genuinely needed. For pricing questions explain it varies per build and invite them to book a consultation. Guide interested visitors to the booking page or WhatsApp.`;
+
+  const history = [{ role: 'system', content: SYSTEM }];
+
+  const fab = document.getElementById('aiFab');
+  const panel = document.getElementById('chatPanel');
+  const closeBtn = document.getElementById('chatClose');
+  const input = document.getElementById('chatInput');
+  const sendBtn = document.getElementById('chatSend');
+  const messages = document.getElementById('chatMessages');
+  if (!fab || !panel || !messages) return;
+
+  const openChat = (open) => {
+    fab.classList.toggle('active', open);
+    panel.classList.toggle('open', open);
+    if (open) setTimeout(() => input && input.focus(), 360);
+  };
+
+  fab.addEventListener('click', () => openChat(!panel.classList.contains('open')));
+  if (closeBtn) closeBtn.addEventListener('click', () => openChat(false));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && panel.classList.contains('open')) openChat(false); });
+
+  const addMessage = (role, text) => {
+    const div = document.createElement('div');
+    div.className = `chat-msg ${role}`;
+    const bubble = document.createElement('div');
+    bubble.className = 'chat-bubble';
+    bubble.textContent = text;
+    div.appendChild(bubble);
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+    return div;
+  };
+
+  const showTyping = () => {
+    const div = document.createElement('div');
+    div.className = 'chat-msg assistant chat-typing';
+    div.innerHTML = '<div class="chat-bubble"><span class="chat-dot"></span><span class="chat-dot"></span><span class="chat-dot"></span></div>';
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+    return div;
+  };
+
+  const ask = async (text) => {
+    if (!text.trim()) return;
+    addMessage('user', text);
+    history.push({ role: 'user', content: text });
+    if (sendBtn) sendBtn.disabled = true;
+    if (input) input.disabled = true;
+    const typing = showTyping();
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: history })
+      });
+      const data = await res.json();
+      const reply = data.choices?.[0]?.message?.content?.trim()
+        || 'Something went wrong. Please WhatsApp us at +91 89680 17508.';
+      history.push({ role: 'assistant', content: reply });
+      typing.remove();
+      addMessage('assistant', reply);
+    } catch {
+      typing.remove();
+      addMessage('assistant', 'Trouble connecting. Please WhatsApp us at +91 89680 17508.');
+    }
+    if (sendBtn) sendBtn.disabled = false;
+    if (input) { input.disabled = false; input.focus(); }
+  };
+
+  if (sendBtn) sendBtn.addEventListener('click', () => { const v = input.value.trim(); input.value = ''; ask(v); });
+  if (input) input.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); const v = input.value.trim(); input.value = ''; ask(v); }
+  });
+})();

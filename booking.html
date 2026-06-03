@@ -417,6 +417,37 @@
   <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">chat</span>
 </a>
 
+<!-- ========= AI CHATBOT ========= -->
+<button class="ai-fab" id="aiFab" aria-label="Ask our studio assistant" data-cursor data-label="ASK AI">
+  <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+</button>
+
+<div class="chat-panel" id="chatPanel" role="dialog" aria-label="Studio assistant">
+  <div class="chat-header">
+    <div class="chat-header-info">
+      <div class="chat-avatar">M·B</div>
+      <div>
+        <div class="chat-name">Studio Assistant</div>
+        <div class="chat-status"><span class="status-dot"></span>Online</div>
+      </div>
+    </div>
+    <button class="chat-close" id="chatClose" aria-label="Close chat">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </div>
+  <div class="chat-messages" id="chatMessages">
+    <div class="chat-msg assistant">
+      <div class="chat-bubble">Welcome to Maggu Brothers. I'm here to answer questions about our bespoke automotive craft. How can I help?</div>
+    </div>
+  </div>
+  <div class="chat-input-row">
+    <input class="chat-input" id="chatInput" type="text" placeholder="Ask about services, pricing, bookings…" autocomplete="off" />
+    <button class="chat-send" id="chatSend" aria-label="Send message">
+      <span class="material-symbols-outlined">send</span>
+    </button>
+  </div>
+</div>
+
 <script src="site.js"></script>
 <script>
 /* Interactive booking */
