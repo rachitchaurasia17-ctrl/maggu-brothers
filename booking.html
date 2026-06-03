@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Reserve — Maggu Brothers</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+  tailwind.config = { darkMode: "class", theme: { extend: { colors: {
+    "ink": "#0A0A0A", "ink-2": "#101010", "ink-3": "#161616",
+    "bone": "#E8E4DD", "bone-dim": "#A8A39A",
+    "blood": "#E61E2A", "blood-deep": "#9A0F18"
+  }}}}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="site.css"/>
+<style>
+  .page-hero { padding: calc(var(--nav-h) + 5rem) 0 3rem; }
+  .booking-grid {
+    display: grid; grid-template-columns: 1fr; gap: 1.5rem;
+    padding: 3rem 0 8rem;
+  }
+  @media (min-width: 1024px) {
+    .booking-grid {
+      grid-template-columns: 1.1fr 1fr 0.9fr;
+      gap: 2rem;
+    }
+  }
+  .panel {
+    background: var(--ink-2);
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 2rem;
+    position: relative;
+  }
+  @media (min-width: 768px) { .panel { padding: 2.5rem; } }
+  .panel-label {
+    position: absolute; top: 1rem; right: 1.25rem;
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 300;
+    font-size: 11rem; line-height: 0.8; color: transparent;
+    -webkit-text-stroke: 1px rgba(255,255,255,0.04);
+    pointer-events: none; user-select: none; letter-spacing: -0.05em;
+  }
+  .panel-step {
+    font-family: 'Geist Mono', monospace; font-size: 10px;
+    letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--bone-dim); margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .panel-step::before {
+    content: ''; width: 18px; height: 1px; background: var(--blood);
+  }
+  .panel-title {
+    font-family: 'Fraunces', serif; font-weight: 300; font-style: italic;
+    font-size: 32px; line-height: 1; margin-bottom: 1.5rem; color: var(--bone);
+  }
+
+  /* Calendar */
+  .cal-head {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 1rem;
+  }
+  .cal-month {
+    font-family: 'Fraunces', serif; font-size: 18px; letter-spacing: -0.01em;
+  }
+  .cal-nav { display: flex; gap: 0.5rem; }
+  .cal-nav button {
+    width: 32px; height: 32px;
+    border: 1px solid rgba(255,255,255,0.1); background: transparent;
+    color: var(--bone-dim); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.3s;
+  }
+  .cal-nav button:hover { background: var(--bone); color: var(--ink); border-color: var(--bone); }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .cal-day-label {
+    font-family: 'Geist Mono', monospace; font-size: 9px;
+    letter-spacing: 0.2em; color: var(--bone-dim);
+    text-align: center; padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .cal-day {
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+    background: transparent; border: 1px solid transparent;
+    color: var(--bone); font-size: 13px;
+    cursor: pointer; transition: all 0.25s var(--ease-out);
+    font-family: 'Geist', sans-serif;
+  }
+  .cal-day:hover:not(.cal-day-disabled):not(.cal-day-selected) {
+    background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.15);
+  }
+  .cal-day-empty { cursor: default; }
+  .cal-day-disabled { color: rgba(232,228,221,0.2); cursor: not-allowed; }
+  .cal-day-selected {
+    background: var(--blood); color: #fff; border-color: var(--blood);
+    box-shadow: 0 0 0 3px rgba(230,30,42,0.2);
+  }
+  .cal-day-today {
+    position: relative;
+  }
+  .cal-day-today::after {
+    content: ''; position: absolute; bottom: 6px; left: 50%;
+    transform: translateX(-50%);
+    width: 4px; height: 4px; background: var(--blood); border-radius: 50%;
+  }
+
+  /* Time slots */
+  .time-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1.5rem; }
+  .time-slot {
+    padding: 14px 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: transparent;
+    color: var(--bone); font-family: 'Geist Mono', monospace;
+    font-size: 11px; letter-spacing: 0.15em;
+    cursor: pointer; transition: all 0.25s var(--ease-out);
+    text-align: center;
+  }
+  .time-slot:hover:not(:disabled):not(.selected) {
+    border-color: var(--bone); background: rgba(255,255,255,0.04);
+  }
+  .time-slot.selected {
+    background: var(--blood); border-color: var(--blood); color: #fff;
+  }
+  .time-slot:disabled {
+    opacity: 0.3; cursor: not-allowed;
+  }
+
+  /* Service tags */
+  .service-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
+  .tag {
+    padding: 8px 14px; border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 999px; cursor: pointer;
+    font-family: 'Geist Mono', monospace; font-size: 10px;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--bone-dim); background: transparent;
+    transition: all 0.3s;
+  }
+  .tag:hover { border-color: var(--bone); color: var(--bone); }
+  .tag.selected {
+    background: var(--bone); color: var(--ink); border-color: var(--bone);
+  }
+
+  /* Form inputs */
+  .field { margin-bottom: 1rem; }
+  .field label {
+    display: block; font-family: 'Geist Mono', monospace; font-size: 9px;
+    letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--bone-dim); margin-bottom: 6px;
+  }
+  .field input, .field textarea {
+    width: 100%; padding: 12px 0;
+    background: transparent; border: none;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    color: var(--bone); font-family: 'Geist', sans-serif; font-size: 15px;
+    outline: none; transition: border 0.3s;
+  }
+  .field input:focus, .field textarea:focus { border-color: var(--blood); }
+
+  /* Summary panel */
+  .summary-row {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .summary-row:last-of-type { border-bottom: none; }
+  .summary-label {
+    font-family: 'Geist Mono', monospace; font-size: 10px;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--bone-dim);
+  }
+  .summary-value {
+    font-family: 'Fraunces', serif; font-size: 16px; text-align: right;
+    color: var(--bone); max-width: 60%;
+  }
+  .summary-value.italic { font-style: italic; }
+</style>
+</head>
+<body>
+
+<div id="preloader">
+  <div class="preloader-mark"><span>M</span><span class="opacity-50">·</span><span>B</span></div>
+  <div class="preloader-meta"><span class="mono">Reserving studio time</span><span class="mono" id="preLoadPct">000</span></div>
+  <div class="preloader-bar"></div>
+</div>
+
+<div class="cursor"></div>
+<div class="cursor-ring"><span class="cursor-label" id="cursorLabel"></span></div>
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<header class="site-nav">
+  <div class="site-nav-inner">
+    <a href="index.html" class="site-brand">Maggu Brothers</a>
+    <nav class="site-nav-links">
+      <a href="index.html" class="nav-link">Index</a>
+      <a href="services.html" class="nav-link">Services</a>
+      <a href="gallery.html" class="nav-link">Gallery</a>
+      <a href="index.html#about" class="nav-link">Studio</a>
+      <a href="booking.html" class="nav-link active"><span class="active-dot"></span>Reserve</a>
+    </nav>
+    <div class="site-nav-meta">
+      <span class="status-pill"><span class="status-dot"></span><span><span id="navClock">--:--</span> CDH</span></span>
+      <a href="index.html#contact" class="btn btn-blood btn-sm" data-cursor data-label="CONTACT">
+        Contact
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="container">
+    <div class="grid md:grid-cols-12 gap-8 items-end">
+      <div class="md:col-span-8">
+        <div class="eyebrow reveal mb-6">— Booking · July 2026 · 2 of 5 slots remaining</div>
+        <h1 class="display font-light leading-[0.92]" style="font-size: clamp(48px, 10vw, 168px);">
+          <span class="reveal-words">Reserve</span><br>
+          <span class="reveal-words display-italic">your transformation.</span>
+        </h1>
+      </div>
+      <div class="md:col-span-4">
+        <p class="body-lg reveal">
+          A bespoke build begins with a conversation. Pick a date for your studio visit — we'll cover materials, expectations, and timeline before you commit to anything.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- BOOKING -->
+<section class="container">
+  <div class="booking-grid">
+
+    <!-- PANEL 01 — DATE -->
+    <div class="panel reveal">
+      <span class="panel-label">01</span>
+      <div class="panel-step">Step one</div>
+      <h2 class="panel-title">Select a date</h2>
+
+      <div class="cal-head">
+        <span class="cal-month" id="calMonth">June 2026</span>
+        <div class="cal-nav">
+          <button id="calPrev" data-cursor data-label="PREV" aria-label="Previous month">
+            <span class="material-symbols-outlined" style="font-size: 16px;">chevron_left</span>
+          </button>
+          <button id="calNext" data-cursor data-label="NEXT" aria-label="Next month">
+            <span class="material-symbols-outlined" style="font-size: 16px;">chevron_right</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="cal-grid mb-2">
+        <div class="cal-day-label">SUN</div><div class="cal-day-label">MON</div><div class="cal-day-label">TUE</div>
+        <div class="cal-day-label">WED</div><div class="cal-day-label">THU</div><div class="cal-day-label">FRI</div>
+        <div class="cal-day-label">SAT</div>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+
+      <div class="mt-6 flex gap-6 mono text-[10px] text-bone-dim flex-wrap">
+        <span class="flex items-center gap-2"><span class="w-2 h-2 bg-blood rounded-full"></span>SELECTED</span>
+        <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full" style="background:rgba(232,228,221,0.4);"></span>AVAILABLE</span>
+        <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full" style="background:rgba(232,228,221,0.15);"></span>FULL</span>
+      </div>
+    </div>
+
+    <!-- PANEL 02 — TIME + SERVICE -->
+    <div class="panel reveal">
+      <span class="panel-label">02</span>
+      <div class="panel-step">Step two</div>
+      <h2 class="panel-title">Pick a time</h2>
+
+      <div class="time-grid" id="timeGrid">
+        <button class="time-slot" data-time="10:00 AM">10:00 AM</button>
+        <button class="time-slot selected" data-time="11:30 AM">11:30 AM</button>
+        <button class="time-slot" data-time="01:00 PM">01:00 PM</button>
+        <button class="time-slot" disabled>02:30 PM</button>
+        <button class="time-slot" data-time="04:00 PM">04:00 PM</button>
+        <button class="time-slot" data-time="05:30 PM">05:30 PM</button>
+      </div>
+
+      <div class="panel-step mt-10">Discipline of interest</div>
+      <div class="service-tags" id="serviceTags">
+        <button class="tag selected" data-service="Audio">Audio</button>
+        <button class="tag" data-service="Interiors">Interiors</button>
+        <button class="tag" data-service="Wraps">Wraps</button>
+        <button class="tag" data-service="Full build">Full build</button>
+      </div>
+
+      <div class="panel-step mt-10">Your details</div>
+      <div class="field">
+        <label for="bname">Full name</label>
+        <input id="bname" type="text" placeholder="As it appears on your registration"/>
+      </div>
+      <div class="field">
+        <label for="bphone">Phone / WhatsApp</label>
+        <input id="bphone" type="tel" placeholder="+91 ..."/>
+      </div>
+      <div class="field">
+        <label for="bcar">Vehicle</label>
+        <input id="bcar" type="text" placeholder="Make · Model · Year"/>
+      </div>
+    </div>
+
+    <!-- PANEL 03 — SUMMARY -->
+    <div class="panel reveal" style="background: linear-gradient(180deg, var(--ink-2) 0%, var(--ink) 100%);">
+      <span class="panel-label">03</span>
+      <div class="panel-step">Reservation summary</div>
+      <h2 class="panel-title">Your visit</h2>
+
+      <div class="summary-row">
+        <span class="summary-label">Date</span>
+        <span class="summary-value italic" id="sumDate">Sat 6 June 2026</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Time</span>
+        <span class="summary-value italic" id="sumTime">11:30 AM</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Discipline</span>
+        <span class="summary-value italic" id="sumService">Audio</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Studio</span>
+        <span class="summary-value">SCO 122 · Sector 28D · Chandigarh</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Duration</span>
+        <span class="summary-value italic">~ 60 minutes</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Cost</span>
+        <span class="summary-value italic">Complimentary</span>
+      </div>
+
+      <div class="mt-8 text-bone-dim text-sm leading-relaxed" style="font-style: italic;">
+        Tea on us. We don't charge for consultations — we charge for the work that follows, only if you choose to commission.
+      </div>
+
+      <button class="btn btn-blood w-full justify-center mt-8" data-cursor data-label="CONFIRM" id="confirmBtn">
+        Confirm reservation
+        <span class="material-symbols-outlined" style="font-size: 16px;">arrow_outward</span>
+      </button>
+
+      <div class="mt-6 flex items-center gap-2 mono text-[10px] text-bone-dim justify-center">
+        <span class="status-dot"></span>
+        We respond within 6 hours, weekdays
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FAQ MICRO -->
+<section class="section-tight">
+  <div class="container grid md:grid-cols-3 gap-8">
+    <div class="reveal">
+      <div class="eyebrow mb-4">— Lead time</div>
+      <h4 class="display text-2xl font-light mb-3">2 — 12 weeks</h4>
+      <p class="text-bone-dim text-sm leading-relaxed">Audio installs typically 2–3 weeks. Full interiors 6–8. Complete builds, 8–12.</p>
+    </div>
+    <div class="reveal">
+      <div class="eyebrow mb-4">— Payment</div>
+      <h4 class="display text-2xl font-light mb-3">30 / 40 / 30</h4>
+      <p class="text-bone-dim text-sm leading-relaxed">Thirty on confirmation, forty at midway, thirty on delivery. Cash, UPI, RTGS, all major cards.</p>
+    </div>
+    <div class="reveal">
+      <div class="eyebrow mb-4">— Warranty</div>
+      <h4 class="display text-2xl font-light mb-3">Lifetime</h4>
+      <p class="text-bone-dim text-sm leading-relaxed">Stitchwork adjusted free, for as long as you own the car. Audio re-tuning included for 24 months.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="grid md:grid-cols-12 gap-12 mb-20">
+      <div class="md:col-span-5">
+        <div class="footer-mark">Maggu Brothers</div>
+        <p class="text-bone-dim max-w-md text-lg leading-relaxed">A workshop in Chandigarh, since 2004. Bespoke automotive craft — engineered by hand, perfected by patience.</p>
+      </div>
+      <div class="md:col-span-2">
+        <div class="eyebrow mb-6">Studio</div>
+        <ul class="space-y-3 text-bone-dim">
+          <li><a href="services.html" class="nav-link inline-block">Services</a></li>
+          <li><a href="gallery.html" class="nav-link inline-block">Gallery</a></li>
+          <li><a href="booking.html" class="nav-link inline-block">Booking</a></li>
+          <li><a href="index.html#about" class="nav-link inline-block">About</a></li>
+        </ul>
+      </div>
+      <div class="md:col-span-2">
+        <div class="eyebrow mb-6">Visit</div>
+        <ul class="space-y-3 text-bone-dim"><li>SCO 122</li><li>Sector 28 D</li><li>Chandigarh, IN</li></ul>
+      </div>
+      <div class="md:col-span-3">
+        <div class="eyebrow mb-6">Hours</div>
+        <ul class="space-y-3 text-bone-dim text-sm">
+          <li class="flex justify-between"><span>Mon — Fri</span><span>11:00 — 20:00</span></li>
+          <li class="flex justify-between"><span>Saturday</span><span>10:00 — 20:00</span></li>
+          <li class="flex justify-between"><span>Sunday</span><span class="opacity-60">Closed</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-wordmark">maggu&nbsp;brothers</div>
+    <div class="footer-legal">
+      <span>© 2026 MAGGU BROTHERS · ALL RIGHTS RESERVED</span>
+      <div class="flex gap-8"><a href="#" class="nav-link">PRIVACY</a><a href="#" class="nav-link">TERMS</a><a href="#" class="nav-link">SITEMAP</a></div>
+      <span>CHANDIGARH · IN · EST. MMIV</span>
+    </div>
+  </div>
+</footer>
+
+<a aria-label="WhatsApp" class="wa-fab" href="https://wa.me/" target="_blank" rel="noopener" data-cursor data-label="CHAT">
+  <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">chat</span>
+</a>
+
+<script src="site.js"></script>
+<script>
+/* Interactive booking */
+(function() {
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const TODAY = new Date(2026, 5, 4); // 4 June 2026
+  let viewYear = 2026, viewMonth = 5;
+  let selected = { y: 2026, m: 5, d: 6 };
+  const monthEl = document.getElementById('calMonth');
+  const gridEl = document.getElementById('calGrid');
+  const sumDate = document.getElementById('sumDate');
+  const sumTime = document.getElementById('sumTime');
+  const sumService = document.getElementById('sumService');
+
+  const fmtDate = (y, m, d) => {
+    const dt = new Date(y, m, d);
+    const dows = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    return `${dows[dt.getDay()]} ${d} ${MONTHS[m]} ${y}`;
+  };
+
+  const render = () => {
+    monthEl.textContent = `${MONTHS[viewMonth]} ${viewYear}`;
+    gridEl.innerHTML = '';
+    const first = new Date(viewYear, viewMonth, 1).getDay();
+    const days = new Date(viewYear, viewMonth + 1, 0).getDate();
+    for (let i = 0; i < first; i++) {
+      const e = document.createElement('div');
+      e.className = 'cal-day cal-day-empty';
+      gridEl.appendChild(e);
+    }
+    for (let d = 1; d <= days; d++) {
+      const b = document.createElement('button');
+      b.className = 'cal-day';
+      b.textContent = d;
+      const dt = new Date(viewYear, viewMonth, d);
+      const isPast = dt < new Date(TODAY.getFullYear(), TODAY.getMonth(), TODAY.getDate());
+      const isToday = dt.toDateString() === TODAY.toDateString();
+      if (isPast) {
+        b.classList.add('cal-day-disabled'); b.disabled = true;
+      }
+      if (isToday) b.classList.add('cal-day-today');
+      if (selected.y === viewYear && selected.m === viewMonth && selected.d === d) {
+        b.classList.add('cal-day-selected');
+      }
+      b.dataset.cursor = ''; b.dataset.label = 'PICK';
+      b.addEventListener('click', () => {
+        if (isPast) return;
+        selected = { y: viewYear, m: viewMonth, d };
+        sumDate.textContent = fmtDate(viewYear, viewMonth, d);
+        render();
+      });
+      gridEl.appendChild(b);
+    }
+    // Re-bind cursor for newly rendered cells
+    if (window.bindCursor) window.bindCursor();
+  };
+
+  document.getElementById('calPrev').addEventListener('click', () => {
+    viewMonth--; if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+    render();
+  });
+  document.getElementById('calNext').addEventListener('click', () => {
+    viewMonth++; if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+    render();
+  });
+
+  // Time slots
+  document.querySelectorAll('.time-slot:not(:disabled)').forEach(s => {
+    s.addEventListener('click', () => {
+      document.querySelectorAll('.time-slot').forEach(x => x.classList.remove('selected'));
+      s.classList.add('selected');
+      sumTime.textContent = s.dataset.time;
+    });
+  });
+
+  // Service tags
+  document.querySelectorAll('.tag').forEach(t => {
+    t.addEventListener('click', () => {
+      document.querySelectorAll('.tag').forEach(x => x.classList.remove('selected'));
+      t.classList.add('selected');
+      sumService.textContent = t.dataset.service;
+    });
+  });
+
+  // Confirm
+  document.getElementById('confirmBtn').addEventListener('click', () => {
+    const name = document.getElementById('bname').value.trim();
+    if (!name) { alert('Please enter your name.'); return; }
+    document.getElementById('confirmBtn').innerHTML = '✓ Reservation received · We\'ll be in touch';
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

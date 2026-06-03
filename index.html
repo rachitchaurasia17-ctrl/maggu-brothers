@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Maggu Brothers — Bespoke Automotive Craft, Chandigarh</title>
+<meta name="description" content="Bespoke automotive customisation in Chandigarh since 2004. Audio, interiors, vinyl wraps — engineered with obsession.">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+  tailwind.config = { darkMode: "class", theme: { extend: {
+    colors: {
+      "ink": "#0A0A0A", "ink-2": "#101010", "ink-3": "#161616",
+      "bone": "#E8E4DD", "bone-dim": "#A8A39A",
+      "blood": "#E61E2A", "blood-deep": "#9A0F18"
+    }
+  }}}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="site.css"/>
+</head>
+<body>
+
+<!-- ========= PRELOADER ========= -->
+<div id="preloader">
+  <div class="preloader-mark">
+    <span>M</span><span class="opacity-50">·</span><span>B</span>
+  </div>
+  <div class="preloader-meta">
+    <span class="mono">Loading bespoke craft</span>
+    <span class="mono" id="preLoadPct">000</span>
+  </div>
+  <div class="preloader-bar"></div>
+</div>
+
+<!-- ========= CURSOR ========= -->
+<div class="cursor"></div>
+<div class="cursor-ring"><span class="cursor-label" id="cursorLabel"></span></div>
+
+<!-- ========= SCROLL PROGRESS ========= -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- ========= STICKY SECTION INDICATOR ========= -->
+<div class="section-indicator hidden md:flex">
+  <span class="mono" id="sectionCurrent">00</span>
+  <span class="indicator-line"></span>
+  <span class="mono">07</span>
+</div>
+
+<!-- ========= NAV ========= -->
+<header class="site-nav" data-page="home">
+  <div class="site-nav-inner">
+    <a href="index.html" class="site-brand">Maggu Brothers</a>
+    <nav class="site-nav-links">
+      <a href="index.html" class="nav-link active"><span class="active-dot"></span>Index</a>
+      <a href="services.html" class="nav-link">Services</a>
+      <a href="gallery.html" class="nav-link">Gallery</a>
+      <a href="#about" class="nav-link">Studio</a>
+      <a href="#contact" class="nav-link">Contact</a>
+    </nav>
+    <div class="site-nav-meta">
+      <span class="status-pill">
+        <span class="status-dot"></span>
+        <span><span id="navClock">--:--</span> CDH</span>
+      </span>
+      <a href="booking.html" class="btn btn-blood btn-sm" data-cursor data-label="BOOK">
+        Book
+        <span class="material-symbols-outlined" style="font-size: 16px;">arrow_outward</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ========= HERO ========= -->
+<section class="video-hero" data-section="01">
+  <video id="heroVideo" autoplay muted loop playsinline poster="mangu%20brother.webp" preload="metadata"
+         style="width:100%;height:100%;object-fit:cover;display:block;background:#000;">
+    <source id="videoSource" src="" type="video/mp4">
+    <img alt="" src="mangu%20brother.webp" style="width:100%;height:100%;object-fit:cover;"/>
+  </video>
+
+  <div class="hero-overlay">
+    <!-- Corners — magazine masthead -->
+    <div class="hero-corner tl" data-parallax="0.3">
+      <div>EST. MMIV</div>
+      <div>SCO 122 · SECTOR 28D</div>
+      <div>CHANDIGARH · IN · 160028</div>
+    </div>
+    <div class="hero-corner tr" data-parallax="0.3">
+      <div>VOL. XXII</div>
+      <div>N°004 · BESPOKE</div>
+      <div>2026 — ONGOING</div>
+    </div>
+    <div class="hero-corner bl" data-parallax="0.2">
+      <div>30.71° N</div>
+      <div>76.79° E</div>
+    </div>
+    <div class="hero-corner br" data-parallax="0.2">
+      <div>FOUNDED BY</div>
+      <div>R. MAGGU &amp; SONS</div>
+    </div>
+
+    <!-- Center mark -->
+    <div class="hero-center" data-parallax="0.6">
+      <div class="eyebrow mb-8 split-text">Bespoke Automotive Craft · Since 2004</div>
+      <h1 class="display hero-headline">
+        <span class="split-words">Driven by</span><br>
+        <span class="split-words display-italic">obsession.</span>
+      </h1>
+      <div class="hero-cta mt-12 flex flex-wrap gap-4 justify-center">
+        <a href="booking.html" class="btn btn-blood" data-cursor data-label="BOOK">
+          Reserve a build
+          <span class="material-symbols-outlined" style="font-size: 16px;">arrow_outward</span>
+        </a>
+        <a href="#manifesto" class="btn btn-ghost" data-cursor data-label="EXPLORE">
+          See the work
+        </a>
+      </div>
+    </div>
+
+    <div class="scroll-hint">
+      <span class="mono">Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========= MARQUEE ========= -->
+<div class="marquee">
+  <div class="marquee-track" id="marqueeTrack">
+    <span>Audio Engineering<span class="dot"></span>Bespoke Interiors<span class="dot"></span>Vinyl &amp; Wraps<span class="dot"></span>Carbon Detailing<span class="dot"></span>Acoustic Tuning<span class="dot"></span>Paint Protection<span class="dot"></span></span>
+    <span>Audio Engineering<span class="dot"></span>Bespoke Interiors<span class="dot"></span>Vinyl &amp; Wraps<span class="dot"></span>Carbon Detailing<span class="dot"></span>Acoustic Tuning<span class="dot"></span>Paint Protection<span class="dot"></span></span>
+  </div>
+</div>
+
+<!-- ========= MANIFESTO ========= -->
+<section class="section" id="manifesto" data-section="02">
+  <div class="container grid-12">
+    <div class="col-span-12 md:col-span-2">
+      <div class="eyebrow reveal">— 01 / Manifesto</div>
+    </div>
+    <div class="col-span-12 md:col-span-10">
+      <h2 class="display headline-xl">
+        <span class="reveal-words">For two decades we've refused</span><br>
+        <span class="reveal-words display-italic">the average.</span><br>
+        <span class="reveal-words">Every car that crosses our</span><br>
+        <span class="reveal-words">threshold leaves transformed —</span><br>
+        <span class="reveal-words display-italic" style="color: var(--blood);">never the same twice.</span>
+      </h2>
+      <div class="mt-20 grid md:grid-cols-2 gap-12 max-w-3xl">
+        <p class="reveal body-lg">
+          We are a workshop, not a chain. Six craftsmen. One garage in Chandigarh. The kind of place where the radio is always on and the tea is always strong.
+        </p>
+        <p class="reveal body-lg">
+          Audio that breathes. Interiors stitched by hand. Vinyl applied with surgical patience. Our pricing is fair because our reputation is everything.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ========= SERVICES ========= -->
+<section class="section" id="services" data-section="03">
+  <div class="container grid-12 mb-20">
+    <div class="col-span-12 md:col-span-2">
+      <div class="eyebrow reveal">— 02 / Services</div>
+    </div>
+    <div class="col-span-12 md:col-span-10">
+      <h2 class="display headline-xl">
+        <span class="reveal-words">Three disciplines.</span><br>
+        <span class="reveal-words display-italic">One standard.</span>
+      </h2>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="grid md:grid-cols-3 gap-6">
+      <a href="services.html#audio" class="svc-card aspect-[3/4] block" data-cursor data-label="VIEW">
+        <img class="svc-img w-full h-full object-cover" src="symphony.png" alt="">
+        <div class="svc-overlay"></div>
+        <div class="absolute inset-0 p-8 flex flex-col justify-between">
+          <div class="flex justify-between items-start">
+            <span class="svc-num">N° 01 · Audio</span>
+            <div class="svc-arrow">
+              <span class="material-symbols-outlined text-white" style="font-size: 18px;">arrow_outward</span>
+            </div>
+          </div>
+          <div>
+            <h3 class="svc-title">Audio<br><span class="display-italic font-light">engineering</span></h3>
+            <p class="text-bone-dim text-sm leading-relaxed max-w-xs mt-4">
+              Bespoke enclosures, DSP tuning, sound deadening. Concert-hall presence inside your cabin.
+            </p>
+          </div>
+        </div>
+      </a>
+
+      <a href="services.html#interiors" class="svc-card aspect-[3/4] block md:translate-y-12" data-cursor data-label="VIEW">
+        <img class="svc-img w-full h-full object-cover" src="bespoke interior.png" alt="">
+        <div class="svc-overlay"></div>
+        <div class="absolute inset-0 p-8 flex flex-col justify-between">
+          <div class="flex justify-between items-start">
+            <span class="svc-num">N° 02 · Interiors</span>
+            <div class="svc-arrow">
+              <span class="material-symbols-outlined text-white" style="font-size: 18px;">arrow_outward</span>
+            </div>
+          </div>
+          <div>
+            <h3 class="svc-title">Bespoke<br><span class="display-italic font-light">interiors</span></h3>
+            <p class="text-bone-dim text-sm leading-relaxed max-w-xs mt-4">
+              Hand-stitched Nappa, Alcantara, carbon trims. Diamond patterns, contrast piping, your spec.
+            </p>
+          </div>
+        </div>
+      </a>
+
+      <a href="services.html#vinyl" class="svc-card aspect-[3/4] block" data-cursor data-label="VIEW">
+        <img class="svc-img w-full h-full object-cover" src="flawless experience.png" alt="">
+        <div class="svc-overlay"></div>
+        <div class="absolute inset-0 p-8 flex flex-col justify-between">
+          <div class="flex justify-between items-start">
+            <span class="svc-num">N° 03 · Wraps</span>
+            <div class="svc-arrow">
+              <span class="material-symbols-outlined text-white" style="font-size: 18px;">arrow_outward</span>
+            </div>
+          </div>
+          <div>
+            <h3 class="svc-title">Vinyl &amp;<br><span class="display-italic font-light">wraps</span></h3>
+            <p class="text-bone-dim text-sm leading-relaxed max-w-xs mt-4">
+              Matte, satin, chrome, PPF. Paint protection that disappears, finishes that command attention.
+            </p>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ========= TRUSTED BY ========= -->
+<section class="section-tight" data-section="04">
+  <div class="container text-center">
+    <div class="eyebrow reveal mb-12">— 03 / Trusted by makes including</div>
+    <div class="flex flex-wrap justify-center items-center gap-x-16 gap-y-6 md:gap-x-24">
+      <span class="brand-name reveal">Porsche</span>
+      <span class="brand-name reveal">BMW M</span>
+      <span class="brand-name reveal">Audi RS</span>
+      <span class="brand-name reveal">Mercedes-AMG</span>
+      <span class="brand-name reveal">Land Rover</span>
+      <span class="brand-name reveal">Jaguar</span>
+      <span class="brand-name reveal">Volvo</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ========= HORIZONTAL CASE STUDIES ========= -->
+<section class="section" data-section="05">
+  <div class="container grid-12 mb-16">
+    <div class="col-span-12 md:col-span-2">
+      <div class="eyebrow reveal">— 04 / Selected work</div>
+    </div>
+    <div class="col-span-12 md:col-span-10 flex flex-wrap items-end justify-between gap-6">
+      <h2 class="display headline-xl">
+        <span class="reveal-words">Recent</span><br>
+        <span class="reveal-words display-italic">commissions.</span>
+      </h2>
+      <div class="mono text-xs text-bone-dim reveal flex items-center gap-3">
+        <span>Drag</span>
+        <span class="material-symbols-outlined" style="font-size: 16px;">east</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-scroller">
+    <div class="case-track" id="caseTrack">
+      <a href="gallery.html" class="case-card" data-cursor data-label="VIEW">
+        <img src="the apex project.png" alt="">
+        <div class="case-meta">
+          <span class="mono text-[10px] text-bone-dim">2025 · 6 MONTH BUILD</span>
+          <h3 class="display text-2xl mt-2">Porsche 911 GT3 RS<br><span class="display-italic">Vanta build</span></h3>
+        </div>
+      </a>
+      <a href="gallery.html" class="case-card" data-cursor data-label="VIEW">
+        <img src="bespoke interior.png" alt="">
+        <div class="case-meta">
+          <span class="mono text-[10px] text-bone-dim">2025 · 14 WEEKS</span>
+          <h3 class="display text-2xl mt-2">Range Rover SV<br><span class="display-italic">Diamond cabin</span></h3>
+        </div>
+      </a>
+      <a href="gallery.html" class="case-card" data-cursor data-label="VIEW">
+        <img src="symphony.png" alt="">
+        <div class="case-meta">
+          <span class="mono text-[10px] text-bone-dim">2025 · ACOUSTIC ENG</span>
+          <h3 class="display text-2xl mt-2">BMW M5 CS<br><span class="display-italic">Symphony in motion</span></h3>
+        </div>
+      </a>
+      <a href="gallery.html" class="case-card" data-cursor data-label="VIEW">
+        <img src="flawless experience.png" alt="">
+        <div class="case-meta">
+          <span class="mono text-[10px] text-bone-dim">2024 · SATIN PPF</span>
+          <h3 class="display text-2xl mt-2">Audi RS7<br><span class="display-italic">Stealth wrap</span></h3>
+        </div>
+      </a>
+      <a href="gallery.html" class="case-card" data-cursor data-label="VIEW">
+        <img src="elevate.png" alt="">
+        <div class="case-meta">
+          <span class="mono text-[10px] text-bone-dim">2024 · CONCOURS</span>
+          <h3 class="display text-2xl mt-2">Mercedes-AMG GT<br><span class="display-italic">Restoration</span></h3>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ========= STATS ========= -->
+<section class="section" id="about" data-section="06">
+  <div class="container grid-12 mb-16">
+    <div class="col-span-12 md:col-span-2">
+      <div class="eyebrow reveal">— 05 / Studio</div>
+    </div>
+    <div class="col-span-12 md:col-span-10">
+      <h2 class="display headline-xl">
+        <span class="reveal-words">Numbers that mean</span><br>
+        <span class="reveal-words display-italic">something.</span>
+      </h2>
+    </div>
+  </div>
+
+  <div class="container grid md:grid-cols-3 gap-12 md:gap-8">
+    <div class="reveal">
+      <div class="stat-num"><span data-count="22">0</span></div>
+      <div class="eyebrow mt-4">Years of practice</div>
+      <p class="text-bone-dim mt-3 text-sm leading-relaxed">Since 2004. Same garage. Same obsession. Two more craftsmen each decade.</p>
+    </div>
+    <div class="reveal">
+      <div class="stat-num"><span data-count="10">0</span><span class="text-blood">k+</span></div>
+      <div class="eyebrow mt-4">Vehicles transformed</div>
+      <p class="text-bone-dim mt-3 text-sm leading-relaxed">From daily drivers to one-off concours builds. Each one logged, photographed, archived.</p>
+    </div>
+    <div class="reveal">
+      <div class="stat-num"><span data-count="100">0</span><span class="text-blood">%</span></div>
+      <div class="eyebrow mt-4">Word of mouth</div>
+      <p class="text-bone-dim mt-3 text-sm leading-relaxed">We've never run an ad. Our waitlist comes from owners who recommend us — to one friend at a time.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ========= PROCESS ========= -->
+<section class="section" data-section="07">
+  <div class="container grid-12 mb-16">
+    <div class="col-span-12 md:col-span-2">
+      <div class="eyebrow reveal">— 06 / Process</div>
+    </div>
+    <div class="col-span-12 md:col-span-10">
+      <h2 class="display headline-xl">
+        <span class="reveal-words">From first conversation</span><br>
+        <span class="reveal-words display-italic">to keys back in hand.</span>
+      </h2>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="grid md:grid-cols-4 gap-px bg-white/10">
+      <div class="bg-ink p-10 reveal">
+        <div class="process-num mb-8">— 01 / Consult</div>
+        <h4 class="display text-3xl mb-4 font-light">Sit with us</h4>
+        <p class="text-bone-dim text-sm leading-relaxed">An hour in the studio. We listen to what you drive, what you love about it, what you don't.</p>
+      </div>
+      <div class="bg-ink p-10 reveal">
+        <div class="process-num mb-8">— 02 / Spec</div>
+        <h4 class="display text-3xl mb-4 font-light">Sketch the spec</h4>
+        <p class="text-bone-dim text-sm leading-relaxed">Materials laid out on the bench. Audio components benchmarked. Quote within 48 hours.</p>
+      </div>
+      <div class="bg-ink p-10 reveal">
+        <div class="process-num mb-8">— 03 / Craft</div>
+        <h4 class="display text-3xl mb-4 font-light">Hands on metal</h4>
+        <p class="text-bone-dim text-sm leading-relaxed">Daily progress photos in your inbox. Workshop visits by appointment, anytime.</p>
+      </div>
+      <div class="bg-ink p-10 reveal">
+        <div class="process-num mb-8">— 04 / Deliver</div>
+        <h4 class="display text-3xl mb-4 font-light">Handover</h4>
+        <p class="text-bone-dim text-sm leading-relaxed">Detailed walkthrough. Lifetime adjustments on stitchwork. Tea before you drive away.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ========= TESTIMONIAL ========= -->
+<section class="section">
+  <div class="container grid-12">
+    <div class="col-span-12 md:col-span-2">
+      <div class="eyebrow reveal">— 07 / Witnessed</div>
+    </div>
+    <div class="col-span-12 md:col-span-10">
+      <blockquote class="quote text-bone reveal">
+        "I've taken my cars to Stuttgart, to Modena, to London. Nothing comes close to the patience Maggu Brothers bring to a build.
+        <span class="text-blood display-italic"> The audio install on my 992 alone is worth a flight from anywhere in India.</span>"
+      </blockquote>
+      <div class="flex items-center gap-4 mt-12 reveal">
+        <div class="testimonial-avatar">A</div>
+        <div>
+          <div class="font-medium">Arjun Mehra</div>
+          <div class="eyebrow mt-1">Collector · Delhi NCR</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========= FINAL CTA ========= -->
+<section class="final-cta" id="contact">
+  <div class="absolute inset-0 opacity-30">
+    <img src="elevate.png" class="w-full h-full object-cover" alt="">
+  </div>
+  <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/85 to-ink/40"></div>
+  <div class="relative container text-center">
+    <div class="eyebrow reveal mb-8">— Reserve</div>
+    <h2 class="display headline-massive font-light leading-[0.95] mb-12">
+      <span class="reveal-words">Let's build</span><br>
+      <span class="reveal-words display-italic" style="color: var(--blood);">something quiet.</span>
+    </h2>
+    <p class="body-lg max-w-xl mx-auto mb-12 reveal">
+      Two slots remain for July 2026. We accept five builds a quarter — never more.
+    </p>
+    <div class="flex flex-wrap gap-4 justify-center reveal">
+      <a href="booking.html" class="btn btn-blood" data-cursor data-label="BOOK">
+        Reserve your slot
+        <span class="material-symbols-outlined" style="font-size: 16px;">arrow_outward</span>
+      </a>
+      <a href="https://wa.me/" target="_blank" rel="noopener" class="btn btn-ghost" data-cursor data-label="CHAT">
+        WhatsApp the studio
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ========= FOOTER ========= -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="grid md:grid-cols-12 gap-12 mb-20">
+      <div class="md:col-span-5">
+        <div class="footer-mark">Maggu Brothers</div>
+        <p class="text-bone-dim max-w-md text-lg leading-relaxed">A workshop in Chandigarh, since 2004. Bespoke automotive craft — engineered by hand, perfected by patience.</p>
+      </div>
+      <div class="md:col-span-2">
+        <div class="eyebrow mb-6">Studio</div>
+        <ul class="space-y-3 text-bone-dim">
+          <li><a href="services.html" class="nav-link inline-block">Services</a></li>
+          <li><a href="gallery.html" class="nav-link inline-block">Gallery</a></li>
+          <li><a href="booking.html" class="nav-link inline-block">Booking</a></li>
+          <li><a href="#about" class="nav-link inline-block">About</a></li>
+        </ul>
+      </div>
+      <div class="md:col-span-2">
+        <div class="eyebrow mb-6">Visit</div>
+        <ul class="space-y-3 text-bone-dim">
+          <li>SCO 122</li>
+          <li>Sector 28 D</li>
+          <li>Chandigarh, IN</li>
+        </ul>
+      </div>
+      <div class="md:col-span-3">
+        <div class="eyebrow mb-6">Hours</div>
+        <ul class="space-y-3 text-bone-dim text-sm">
+          <li class="flex justify-between"><span>Mon — Fri</span><span>11:00 — 20:00</span></li>
+          <li class="flex justify-between"><span>Saturday</span><span>10:00 — 20:00</span></li>
+          <li class="flex justify-between"><span>Sunday</span><span class="opacity-60">Closed</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-wordmark">maggu&nbsp;brothers</div>
+
+    <div class="footer-legal">
+      <span>© 2026 MAGGU BROTHERS · ALL RIGHTS RESERVED</span>
+      <div class="flex gap-8">
+        <a href="#" class="nav-link">PRIVACY</a>
+        <a href="#" class="nav-link">TERMS</a>
+        <a href="#" class="nav-link">SITEMAP</a>
+      </div>
+      <span>CHANDIGARH · IN · EST. MMIV</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ========= WHATSAPP ========= -->
+<a aria-label="WhatsApp" class="wa-fab" href="https://wa.me/" target="_blank" rel="noopener" data-cursor data-label="CHAT">
+  <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">chat</span>
+</a>
+
+<script src="site.js"></script>
+</body>
+</html>

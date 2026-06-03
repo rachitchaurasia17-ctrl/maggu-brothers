@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gallery — Maggu Brothers</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+  tailwind.config = { darkMode: "class", theme: { extend: { colors: {
+    "ink": "#0A0A0A", "ink-2": "#101010", "ink-3": "#161616",
+    "bone": "#E8E4DD", "bone-dim": "#A8A39A",
+    "blood": "#E61E2A", "blood-deep": "#9A0F18"
+  }}}}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="site.css"/>
+<style>
+  .page-hero { padding: calc(var(--nav-h) + 6rem) 0 4rem; }
+  .filter-bar {
+    display: flex; gap: 1.5rem; flex-wrap: wrap;
+    padding: 2rem 0;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .filter-btn {
+    font-family: 'Geist Mono', monospace; font-size: 11px;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--bone-dim); background: transparent; border: none;
+    padding: 4px 0; position: relative; cursor: pointer;
+    transition: color 0.3s;
+  }
+  .filter-btn::after {
+    content: ''; position: absolute; bottom: -4px; left: 0;
+    width: 100%; height: 1px; background: var(--blood);
+    transform: scaleX(0); transform-origin: right;
+    transition: transform 0.4s var(--ease-out);
+  }
+  .filter-btn.active { color: var(--bone); }
+  .filter-btn.active::after { transform: scaleX(1); transform-origin: left; }
+  .filter-btn .count {
+    font-size: 9px; opacity: 0.6; margin-left: 6px;
+    font-family: 'Fraunces', serif; font-style: italic;
+  }
+
+  .gallery-grid {
+    display: grid; grid-template-columns: 1fr; gap: 1.5rem;
+    padding: 4rem 0;
+  }
+  @media (min-width: 768px) {
+    .gallery-grid { grid-template-columns: repeat(12, 1fr); gap: 2rem; padding: 6rem 0; }
+  }
+  .gal-card {
+    position: relative; overflow: hidden; isolation: isolate;
+    border: 1px solid rgba(255,255,255,0.05);
+    background: var(--ink-2);
+    text-decoration: none; color: var(--bone);
+    transition: transform 0.6s var(--ease-out);
+  }
+  .gal-card img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 1.6s var(--ease-out), filter 0.6s;
+    filter: grayscale(30%) brightness(0.7);
+  }
+  .gal-card:hover img { transform: scale(1.05); filter: grayscale(0%) brightness(1); }
+  .gal-card::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 50%, rgba(10,10,10,0.95) 100%);
+    pointer-events: none;
+  }
+  .gal-meta {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 24px; z-index: 1;
+  }
+  .gal-meta .display { font-weight: 400; line-height: 1.05; }
+  .gal-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: 'Geist Mono', monospace; font-size: 10px;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--bone-dim);
+  }
+  .gal-tag::before {
+    content: ''; width: 6px; height: 6px;
+    background: var(--blood); border-radius: 50%;
+  }
+
+  /* Asymmetric layout */
+  .gal-card-l { grid-column: 1 / -1; aspect-ratio: 16/9; }
+  .gal-card-m { grid-column: 1 / -1; aspect-ratio: 4/5; }
+  .gal-card-s { grid-column: 1 / -1; aspect-ratio: 1/1; }
+  @media (min-width: 768px) {
+    .gal-card-l { grid-column: span 8; aspect-ratio: 16/10; }
+    .gal-card-m { grid-column: span 4; aspect-ratio: 4/5; }
+    .gal-card-s { grid-column: span 4; aspect-ratio: 1/1; }
+    .gal-offset { transform: translateY(48px); }
+  }
+</style>
+</head>
+<body>
+
+<div id="preloader">
+  <div class="preloader-mark"><span>M</span><span class="opacity-50">·</span><span>B</span></div>
+  <div class="preloader-meta"><span class="mono">Loading gallery</span><span class="mono" id="preLoadPct">000</span></div>
+  <div class="preloader-bar"></div>
+</div>
+
+<div class="cursor"></div>
+<div class="cursor-ring"><span class="cursor-label" id="cursorLabel"></span></div>
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<header class="site-nav">
+  <div class="site-nav-inner">
+    <a href="index.html" class="site-brand">Maggu Brothers</a>
+    <nav class="site-nav-links">
+      <a href="index.html" class="nav-link">Index</a>
+      <a href="services.html" class="nav-link">Services</a>
+      <a href="gallery.html" class="nav-link active"><span class="active-dot"></span>Gallery</a>
+      <a href="index.html#about" class="nav-link">Studio</a>
+      <a href="index.html#contact" class="nav-link">Contact</a>
+    </nav>
+    <div class="site-nav-meta">
+      <span class="status-pill"><span class="status-dot"></span><span><span id="navClock">--:--</span> CDH</span></span>
+      <a href="booking.html" class="btn btn-blood btn-sm" data-cursor data-label="BOOK">
+        Book <span class="material-symbols-outlined" style="font-size: 16px;">arrow_outward</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="container">
+    <div class="grid md:grid-cols-12 gap-8 items-end">
+      <div class="md:col-span-8">
+        <div class="eyebrow reveal mb-6">— Gallery · Selected works · 2024–2026</div>
+        <h1 class="display font-light leading-[0.92]" style="font-size: clamp(48px, 10vw, 168px);">
+          <span class="reveal-words">The work</span><br>
+          <span class="reveal-words display-italic">speaks first.</span>
+        </h1>
+      </div>
+      <div class="md:col-span-4">
+        <p class="body-lg reveal">
+          Forty-eight builds catalogued. Every commission photographed in the studio before delivery — for the archive, and for the next owner who finds us.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FILTER BAR -->
+<section class="container">
+  <div class="filter-bar reveal">
+    <button class="filter-btn active" data-filter="all">All <span class="count">·48</span></button>
+    <button class="filter-btn" data-filter="audio">Audio <span class="count">·19</span></button>
+    <button class="filter-btn" data-filter="interiors">Interiors <span class="count">·14</span></button>
+    <button class="filter-btn" data-filter="exteriors">Exteriors <span class="count">·12</span></button>
+    <button class="filter-btn" data-filter="featured">Featured builds <span class="count">·03</span></button>
+    <div class="ml-auto mono text-[10px] text-bone-dim self-center">
+      Sorted · Newest first
+    </div>
+  </div>
+</section>
+
+<!-- GRID -->
+<section class="container">
+  <div class="gallery-grid" id="grid">
+
+    <a href="#" class="gal-card gal-card-l reveal" data-category="featured" data-cursor data-label="VIEW">
+      <img src="the apex project.png" alt="">
+      <div class="gal-meta">
+        <span class="gal-tag">2025 · Featured · 6-month build</span>
+        <h3 class="display text-3xl md:text-5xl mt-3">Porsche 911 GT3 RS<br><span class="display-italic">Vanta build</span></h3>
+      </div>
+    </a>
+
+    <a href="#" class="gal-card gal-card-m reveal gal-offset" data-category="interiors" data-cursor data-label="VIEW">
+      <img src="bespoke interior.png" alt="">
+      <div class="gal-meta">
+        <span class="gal-tag">2025 · Interiors</span>
+        <h3 class="display text-2xl md:text-3xl mt-3">Range Rover SV<br><span class="display-italic">Diamond cabin</span></h3>
+      </div>
+    </a>
+
+    <a href="#" class="gal-card gal-card-m reveal" data-category="audio" data-cursor data-label="VIEW">
+      <img src="symphony.png" alt="">
+      <div class="gal-meta">
+        <span class="gal-tag">2025 · Audio</span>
+        <h3 class="display text-2xl md:text-3xl mt-3">BMW M5 CS<br><span class="display-italic">Symphony in motion</span></h3>
+      </div>
+    </a>
+
+    <a href="#" class="gal-card gal-card-s reveal" data-category="exteriors" data-cursor data-label="VIEW">
+      <img src="flawless experience.png" alt="">
+      <div class="gal-meta">
+        <span class="gal-tag">2024 · Wraps</span>
+        <h3 class="display text-2xl mt-3">Audi RS7<br><span class="display-italic">Stealth</span></h3>
+      </div>
+    </a>
+
+    <a href="#" class="gal-card gal-card-s reveal gal-offset" data-category="exteriors" data-cursor data-label="VIEW">
+      <img src="elevate.png" alt="">
+      <div class="gal-meta">
+        <span class="gal-tag">2024 · Concours</span>
+        <h3 class="display text-2xl mt-3">Mercedes-AMG GT<br><span class="display-italic">Restoration</span></h3>
+      </div>
+    </a>
+
+    <a href="#" class="gal-card gal-card-s reveal" data-category="audio" data-cursor data-label="VIEW">
+      <img src="symphony.png" alt="">
+      <div class="gal-meta">
+        <span class="gal-tag">2024 · Audio</span>
+        <h3 class="display text-2xl mt-3">Volvo XC90<br><span class="display-italic">Quiet cabin</span></h3>
+      </div>
+    </a>
+
+    <a href="#" class="gal-card gal-card-m reveal" data-category="interiors" data-cursor data-label="VIEW">
+      <img src="bespoke interior.png" alt="">
+      <div class="gal-meta">
+        <span class="gal-tag">2024 · Interiors</span>
+        <h3 class="display text-2xl md:text-3xl mt-3">Jaguar F-Type R<br><span class="display-italic">Cognac cabin</span></h3>
+      </div>
+    </a>
+
+    <a href="#" class="gal-card gal-card-l reveal" data-category="featured" data-cursor data-label="VIEW">
+      <img src="elevate.png" alt="">
+      <div class="gal-meta">
+        <span class="gal-tag">2024 · Featured · Concours</span>
+        <h3 class="display text-3xl md:text-5xl mt-3">Land Rover Defender<br><span class="display-italic">Field study</span></h3>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CTA -->
+<section class="final-cta">
+  <div class="absolute inset-0 opacity-25">
+    <img src="symphony.png" class="w-full h-full object-cover" alt="">
+  </div>
+  <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/85 to-ink/40"></div>
+  <div class="relative container text-center">
+    <div class="eyebrow reveal mb-8">— What's next</div>
+    <h2 class="display headline-massive font-light leading-[0.95] mb-12">
+      <span class="reveal-words">Your build,</span><br>
+      <span class="reveal-words display-italic" style="color: var(--blood);">in this archive.</span>
+    </h2>
+    <a href="booking.html" class="btn btn-blood" data-cursor data-label="BOOK">
+      Reserve a slot <span class="material-symbols-outlined" style="font-size: 16px;">arrow_outward</span>
+    </a>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="grid md:grid-cols-12 gap-12 mb-20">
+      <div class="md:col-span-5">
+        <div class="footer-mark">Maggu Brothers</div>
+        <p class="text-bone-dim max-w-md text-lg leading-relaxed">A workshop in Chandigarh, since 2004. Bespoke automotive craft — engineered by hand, perfected by patience.</p>
+      </div>
+      <div class="md:col-span-2">
+        <div class="eyebrow mb-6">Studio</div>
+        <ul class="space-y-3 text-bone-dim">
+          <li><a href="services.html" class="nav-link inline-block">Services</a></li>
+          <li><a href="gallery.html" class="nav-link inline-block">Gallery</a></li>
+          <li><a href="booking.html" class="nav-link inline-block">Booking</a></li>
+          <li><a href="index.html#about" class="nav-link inline-block">About</a></li>
+        </ul>
+      </div>
+      <div class="md:col-span-2">
+        <div class="eyebrow mb-6">Visit</div>
+        <ul class="space-y-3 text-bone-dim"><li>SCO 122</li><li>Sector 28 D</li><li>Chandigarh, IN</li></ul>
+      </div>
+      <div class="md:col-span-3">
+        <div class="eyebrow mb-6">Hours</div>
+        <ul class="space-y-3 text-bone-dim text-sm">
+          <li class="flex justify-between"><span>Mon — Fri</span><span>11:00 — 20:00</span></li>
+          <li class="flex justify-between"><span>Saturday</span><span>10:00 — 20:00</span></li>
+          <li class="flex justify-between"><span>Sunday</span><span class="opacity-60">Closed</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-wordmark">maggu&nbsp;brothers</div>
+    <div class="footer-legal">
+      <span>© 2026 MAGGU BROTHERS · ALL RIGHTS RESERVED</span>
+      <div class="flex gap-8"><a href="#" class="nav-link">PRIVACY</a><a href="#" class="nav-link">TERMS</a><a href="#" class="nav-link">SITEMAP</a></div>
+      <span>CHANDIGARH · IN · EST. MMIV</span>
+    </div>
+  </div>
+</footer>
+
+<a aria-label="WhatsApp" class="wa-fab" href="https://wa.me/" target="_blank" rel="noopener" data-cursor data-label="CHAT">
+  <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">chat</span>
+</a>
+
+<script src="site.js"></script>
+<script>
+  // Filter behavior
+  (function() {
+    const buttons = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.gal-card');
+    buttons.forEach(btn => btn.addEventListener('click', () => {
+      buttons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.dataset.filter;
+      cards.forEach(c => {
+        c.style.display = (f === 'all' || c.dataset.category === f) ? '' : 'none';
+      });
+    }));
+  })();
+</script>
+</body>
+</html>

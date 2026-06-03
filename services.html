@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Services — Maggu Brothers</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+  tailwind.config = { darkMode: "class", theme: { extend: { colors: {
+    "ink": "#0A0A0A", "ink-2": "#101010", "ink-3": "#161616",
+    "bone": "#E8E4DD", "bone-dim": "#A8A39A",
+    "blood": "#E61E2A", "blood-deep": "#9A0F18"
+  }}}}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="site.css"/>
+<style>
+  .page-hero { padding: calc(var(--nav-h) + 6rem) 0 6rem; }
+  .page-hero h1 { font-size: clamp(56px, 11vw, 200px); }
+  .svc-row { display: grid; grid-template-columns: 1fr; gap: 4rem; align-items: center; padding: 6rem 0; border-top: 1px solid rgba(255,255,255,0.08); }
+  @media (min-width: 900px) { .svc-row { grid-template-columns: 5fr 7fr; gap: 6rem; padding: 9rem 0; } }
+  .svc-row.reverse > div:first-child { order: 2; }
+  @media (min-width: 900px) { .svc-row.reverse { grid-template-columns: 7fr 5fr; } }
+  .svc-row-img {
+    position: relative; aspect-ratio: 4/3; overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .svc-row-img img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 1.4s var(--ease-out);
+  }
+  .svc-row-img:hover img { transform: scale(1.04); }
+  .svc-row-img::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, transparent 60%, rgba(230,30,42,0.15) 100%);
+    pointer-events: none;
+  }
+  .feature-list { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem 2rem; }
+  .feature-list li {
+    list-style: none; padding: 14px 0;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    font-family: 'Geist Mono', monospace; font-size: 11px;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--bone-dim);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .feature-list li::before {
+    content: '+'; color: var(--blood); font-family: 'Fraunces', serif;
+    font-style: italic; font-size: 18px;
+  }
+</style>
+</head>
+<body>
+
+<div id="preloader">
+  <div class="preloader-mark"><span>M</span><span class="opacity-50">·</span><span>B</span></div>
+  <div class="preloader-meta"><span class="mono">Loading services</span><span class="mono" id="preLoadPct">000</span></div>
+  <div class="preloader-bar"></div>
+</div>
+
+<div class="cursor"></div>
+<div class="cursor-ring"><span class="cursor-label" id="cursorLabel"></span></div>
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- NAV (standardized) -->
+<header class="site-nav">
+  <div class="site-nav-inner">
+    <a href="index.html" class="site-brand">Maggu Brothers</a>
+    <nav class="site-nav-links">
+      <a href="index.html" class="nav-link">Index</a>
+      <a href="services.html" class="nav-link active"><span class="active-dot"></span>Services</a>
+      <a href="gallery.html" class="nav-link">Gallery</a>
+      <a href="index.html#about" class="nav-link">Studio</a>
+      <a href="index.html#contact" class="nav-link">Contact</a>
+    </nav>
+    <div class="site-nav-meta">
+      <span class="status-pill"><span class="status-dot"></span><span><span id="navClock">--:--</span> CDH</span></span>
+      <a href="booking.html" class="btn btn-blood btn-sm" data-cursor data-label="BOOK">
+        Book <span class="material-symbols-outlined" style="font-size: 16px;">arrow_outward</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="container">
+    <div class="eyebrow reveal mb-8">— Services · Three disciplines</div>
+    <h1 class="display font-light leading-[0.92]">
+      <span class="reveal-words">Engineered</span><br>
+      <span class="reveal-words display-italic">to last decades.</span>
+    </h1>
+    <p class="body-lg max-w-2xl mt-12 reveal">
+      Each commission is a conversation. We don't sell catalogue parts. We build, test, and tune every element by hand — to the specific car, the specific driver.
+    </p>
+  </div>
+</section>
+
+<div class="marquee">
+  <div class="marquee-track">
+    <span>Audio Engineering<span class="dot"></span>Bespoke Interiors<span class="dot"></span>Vinyl &amp; Wraps<span class="dot"></span>Carbon Detailing<span class="dot"></span>Acoustic Tuning<span class="dot"></span></span>
+    <span>Audio Engineering<span class="dot"></span>Bespoke Interiors<span class="dot"></span>Vinyl &amp; Wraps<span class="dot"></span>Carbon Detailing<span class="dot"></span>Acoustic Tuning<span class="dot"></span></span>
+  </div>
+</div>
+
+<!-- AUDIO -->
+<section class="container" id="audio">
+  <div class="svc-row">
+    <div class="reveal">
+      <div class="eyebrow mb-6">— N° 01 / Acoustic engineering</div>
+      <h2 class="display headline-xl font-light mb-8">
+        Premium<br><span class="display-italic">audio tuning.</span>
+      </h2>
+      <p class="body-lg mb-10">
+        Subwoofer enclosures milled in-house. DSP profiles tuned per cabin. Speaker placement modeled against the geometry of your specific interior. The result is sound that doesn't fight the road — it absorbs it.
+      </p>
+      <ul class="feature-list mb-12">
+        <li>Custom enclosures</li>
+        <li>DSP integration</li>
+        <li>Sound deadening</li>
+        <li>Active 3-way fronts</li>
+        <li>Concealed amps</li>
+        <li>Lifetime tuning</li>
+      </ul>
+      <a href="booking.html" class="btn btn-blood" data-cursor data-label="BOOK">
+        Book a consult <span class="material-symbols-outlined" style="font-size: 16px;">arrow_outward</span>
+      </a>
+    </div>
+    <div class="svc-row-img reveal" data-cursor data-label="EXPLORE">
+      <img src="symphony.png" alt="Premium Audio">
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- INTERIORS -->
+<section class="container" id="interiors">
+  <div class="svc-row reverse">
+    <div class="svc-row-img reveal" data-cursor data-label="EXPLORE">
+      <img src="bespoke interior.png" alt="Bespoke Interiors">
+    </div>
+    <div class="reveal">
+      <div class="eyebrow mb-6">— N° 02 / Luxury craftsmanship</div>
+      <h2 class="display headline-xl font-light mb-8">
+        Bespoke<br><span class="display-italic">interiors.</span>
+      </h2>
+      <p class="body-lg mb-10">
+        Nappa, Alcantara, Bridge-of-Weir. Diamond stitching, contrast piping, hand-burnished trims. Eight in-house upholsterers averaging fifteen years each. We don't outsource a single seam.
+      </p>
+      <ul class="feature-list mb-12">
+        <li>Nappa leather</li>
+        <li>Alcantara headliners</li>
+        <li>Carbon fibre trims</li>
+        <li>Diamond stitching</li>
+        <li>Contrast piping</li>
+        <li>Embossed monograms</li>
+      </ul>
+      <a href="gallery.html" class="btn btn-ghost" data-cursor data-label="VIEW">
+        View past builds <span class="material-symbols-outlined" style="font-size: 16px;">arrow_outward</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- WRAPPING -->
+<section class="container" id="vinyl">
+  <div class="svc-row">
+    <div class="reveal">
+      <div class="eyebrow mb-6">— N° 03 / Aesthetic transformation</div>
+      <h2 class="display headline-xl font-light mb-8">
+        Vinyl &amp;<br><span class="display-italic">wraps.</span>
+      </h2>
+      <p class="body-lg mb-10">
+        Matte, satin, gloss, chrome, colour-shift. Self-healing PPF underneath when you want both the look and the armour. Every panel hand-pulled, every edge tucked, no shortcuts at the seams.
+      </p>
+      <ul class="feature-list mb-12">
+        <li>3M / Avery / Hexis</li>
+        <li>Paint Protection Film</li>
+        <li>Ceramic coating</li>
+        <li>Colour-shift wraps</li>
+        <li>Stealth PPF</li>
+        <li>5-year warranty</li>
+      </ul>
+      <a href="booking.html" class="btn btn-blood" data-cursor data-label="BOOK">
+        Reserve a slot <span class="material-symbols-outlined" style="font-size: 16px;">arrow_outward</span>
+      </a>
+    </div>
+    <div class="svc-row-img reveal" data-cursor data-label="EXPLORE">
+      <img src="flawless experience.png" alt="Professional Wrapping">
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CTA -->
+<section class="final-cta">
+  <div class="absolute inset-0 opacity-20">
+    <img src="the apex project.png" class="w-full h-full object-cover" alt="">
+  </div>
+  <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/85 to-ink/40"></div>
+  <div class="relative container text-center">
+    <div class="eyebrow reveal mb-8">— Begin</div>
+    <h2 class="display headline-massive font-light leading-[0.95] mb-12">
+      <span class="reveal-words">Bring us</span><br>
+      <span class="reveal-words display-italic" style="color: var(--blood);">your obsession.</span>
+    </h2>
+    <a href="booking.html" class="btn btn-blood" data-cursor data-label="BOOK">
+      Start a build <span class="material-symbols-outlined" style="font-size: 16px;">arrow_outward</span>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="grid md:grid-cols-12 gap-12 mb-20">
+      <div class="md:col-span-5">
+        <div class="footer-mark">Maggu Brothers</div>
+        <p class="text-bone-dim max-w-md text-lg leading-relaxed">A workshop in Chandigarh, since 2004. Bespoke automotive craft — engineered by hand, perfected by patience.</p>
+      </div>
+      <div class="md:col-span-2">
+        <div class="eyebrow mb-6">Studio</div>
+        <ul class="space-y-3 text-bone-dim">
+          <li><a href="services.html" class="nav-link inline-block">Services</a></li>
+          <li><a href="gallery.html" class="nav-link inline-block">Gallery</a></li>
+          <li><a href="booking.html" class="nav-link inline-block">Booking</a></li>
+          <li><a href="index.html#about" class="nav-link inline-block">About</a></li>
+        </ul>
+      </div>
+      <div class="md:col-span-2">
+        <div class="eyebrow mb-6">Visit</div>
+        <ul class="space-y-3 text-bone-dim"><li>SCO 122</li><li>Sector 28 D</li><li>Chandigarh, IN</li></ul>
+      </div>
+      <div class="md:col-span-3">
+        <div class="eyebrow mb-6">Hours</div>
+        <ul class="space-y-3 text-bone-dim text-sm">
+          <li class="flex justify-between"><span>Mon — Fri</span><span>11:00 — 20:00</span></li>
+          <li class="flex justify-between"><span>Saturday</span><span>10:00 — 20:00</span></li>
+          <li class="flex justify-between"><span>Sunday</span><span class="opacity-60">Closed</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-wordmark">maggu&nbsp;brothers</div>
+    <div class="footer-legal">
+      <span>© 2026 MAGGU BROTHERS · ALL RIGHTS RESERVED</span>
+      <div class="flex gap-8"><a href="#" class="nav-link">PRIVACY</a><a href="#" class="nav-link">TERMS</a><a href="#" class="nav-link">SITEMAP</a></div>
+      <span>CHANDIGARH · IN · EST. MMIV</span>
+    </div>
+  </div>
+</footer>
+
+<a aria-label="WhatsApp" class="wa-fab" href="https://wa.me/" target="_blank" rel="noopener" data-cursor data-label="CHAT">
+  <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">chat</span>
+</a>
+
+<script src="site.js"></script>
+</body>
+</html>
